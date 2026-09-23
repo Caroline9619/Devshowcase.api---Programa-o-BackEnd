@@ -1,0 +1,13 @@
+package br.com.csm.devshowcase.dto;
+
+import br.com.csm.devshowcase.model.Technology;
+
+public record TechnologyResponseDTO(Long id, String name) {
+
+    public static TechnologyResponseDTO fromEntity(Technology tech) {
+        return new TechnologyResponseDTO(
+                tech.getId(),
+                tech.getName()
+        );
+    }
+}
