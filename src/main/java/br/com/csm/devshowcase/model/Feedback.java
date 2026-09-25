@@ -20,12 +20,12 @@ public class Feedback {
     @JoinColumn(name = "project_id")
     private Project project;
 
-    public Feedback() {
-    }
+    public Feedback() {}
 
-    public Feedback(Integer rating, String comment) {
+    public Feedback(Integer rating, String comment, Project project) {
         this.rating = rating;
         this.comment = comment;
+        this.project = project;
     }
 
     public Long getId() {

@@ -6,11 +6,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.csm.devshowcase.dto.ProfileRequestDTO;
 import br.com.csm.devshowcase.dto.ProfileResponseDTO;
+import br.com.csm.devshowcase.exception.ResourceNotFoundException;
 import br.com.csm.devshowcase.model.Profile;
 import br.com.csm.devshowcase.repository.ProfileRepository;
-
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.http.HttpStatus;
 
 @Service
 public class ProfileService {
@@ -32,14 +30,12 @@ public class ProfileService {
     }
 
     @Transactional(readOnly = true)
-public ProfileResponseDTO buscarPorId(Long id) {
+    public ProfileResponseDTO buscarPorId(Long id) {
 
-    Profile profile = repository.findById(id)
-            .orElseThrow(() ->
-                    new ResponseStatusException(
-                            HttpStatus.NOT_FOUND,
-                            "Perfil não encontrado"));
+        Profile profile = repository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Perfil não encontrado"));
 
-    return ProfileResponseDTO.fromEntity(profile);
-}
+        return ProfileResponseDTO.fromEntity(profile);
+    }
 }

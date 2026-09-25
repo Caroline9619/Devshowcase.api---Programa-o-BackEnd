@@ -9,6 +9,10 @@ import br.com.csm.devshowcase.dto.ProjectRequestDTO;
 import br.com.csm.devshowcase.dto.ProjectResponseDTO;
 import br.com.csm.devshowcase.model.Project;
 import br.com.csm.devshowcase.repository.ProjectRepository;
+import br.com.csm.devshowcase.exception.ResourceNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class ProjectService {
@@ -40,4 +44,40 @@ public class ProjectService {
                 .map(ProjectResponseDTO::fromEntity)
                 .toList();
     }
+    @Transactional
+public ProjectResponseDTO incrementarCurtida(Long id) {
+
+    Project project = repository.findById(id)
+            .orElseThrow(() ->
+                    new ResourceNotFoundException("Projeto não encontrado"));
+
+    project.setLikes(project.getLikes() + 1);
+
+    project = repository.save(project);
+
+    return ProjectResponseDTO.fromEntity(project);
+}
+@Transactional(readOnly = true)
+public Page<ProjectResponseDTO> buscarComFiltro(
+        String technology,
+        Integer page,
+        Integer size) {
+
+    Pageable pageable = PageRequest.of(page, size);
+
+    Page<Project> projects;
+
+    if (technology == null || technology.isBlank()) {
+
+        projects = repository.findAll(pageable);
+
+    } else {
+
+        projects = repository.findByTechnologiesNameIgnoreCase(
+                technology,
+                pageable);
+    }
+
+    return projects.map(ProjectResponseDTO::fromEntity);
+}
 }

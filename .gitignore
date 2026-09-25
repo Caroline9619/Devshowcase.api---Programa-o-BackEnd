@@ -31,3 +31,11 @@ build/
 
 ### VS Code ###
 .vscode/
+# Banco H2 local
+*.mv.db
+
+# Arquivos de log
+*.log
+
+
+

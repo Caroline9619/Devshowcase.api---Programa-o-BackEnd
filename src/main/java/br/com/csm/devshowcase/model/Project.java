@@ -1,6 +1,7 @@
 package br.com.csm.devshowcase.model;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -30,13 +31,18 @@ public class Project {
             joinColumns = @JoinColumn(name = "project_id"),
             inverseJoinColumns = @JoinColumn(name = "technology_id")
     )
-    private List<Technology> technologies;
+    private List<Technology> technologies = new ArrayList<>();
 
-    @OneToMany(mappedBy = "project")
-    private List<Feedback> feedbacks;
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    private List<Feedback> feedbacks = new ArrayList<>();
 
-    public Project() {
-    }
+    @Column(nullable = false)
+    private Integer likes = 0;
+
+    @Column(nullable = false)
+    private Double averageRating = 0.0;
+
+    public Project() {}
 
     public Project(String title, String description, String repositoryUrl) {
         this.title = title;
@@ -72,6 +78,14 @@ public class Project {
         return feedbacks;
     }
 
+    public Integer getLikes() {
+        return likes;
+    }
+
+    public Double getAverageRating() {
+        return averageRating;
+    }
+
     public void setTitle(String title) {
         this.title = title;
     }
@@ -94,5 +108,13 @@ public class Project {
 
     public void setFeedbacks(List<Feedback> feedbacks) {
         this.feedbacks = feedbacks;
+    }
+
+    public void setLikes(Integer likes) {
+        this.likes = likes;
+    }
+
+    public void setAverageRating(Double averageRating) {
+        this.averageRating = averageRating;
     }
 }
